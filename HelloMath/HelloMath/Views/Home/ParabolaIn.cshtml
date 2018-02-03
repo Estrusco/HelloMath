@@ -1,0 +1,16 @@
+﻿@model HelloMath.Models.ParabolaRequest
+
+@{
+    ViewBag.Title = "Equazione della Parabola";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<p>Inserire i parametri A B C dell'equazione</p>
+
+@using (Html.BeginForm("Parabola", "Home", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel();
+    <input type="submit" value="Parabola" />
+}

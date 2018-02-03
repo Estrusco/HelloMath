@@ -1,0 +1,18 @@
+﻿@model HelloMath.Models.ParabolaResponse
+
+@{
+    ViewBag.Title = "Equazione della Parabola";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<p>Inserire i parametri A B C dell'equazione</p>
+
+<div>
+    <label>Delta: </label> @Model.Delta<br />
+    <label>Delta Negato: </label> @Model.DeltaNegato<br />
+    <label>Vertice: </label> X: @Model.Vertice.X ; Y: @Model.Vertice.Y<br />
+    <label>Fuoco: </label> X: @Model.Fuoco.X ; Y: @Model.Fuoco.Y<br />
+    <label>Direttrice: </label> Y: @Model.Direttrice<br />
+    <label>Asse: </label> Y: @Model.Asse<br />
+</div>
