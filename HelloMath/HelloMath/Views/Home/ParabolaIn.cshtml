@@ -12,21 +12,29 @@
 {
     @Html.ValidationSummary(true)
     @Html.EditorForModel();
-    <input type="submit" value="Parabola" />
 }
+<input type="button" id="test" title="Prova" value="Test" />
 
+@section Scripts
+{
 <script type="text/javascript">
     $(function () {
-        // Declare a proxy to reference the hub.
-        var lth = $.connection.liveTimingHub;
-        lth.client.update = function (sessId, tabsNum)
+        var parabolaHub = $.connection.parabolaHub;
+
+        $('#test').click(function (e) {
+            var a = $('#ParamA').val();
+            var b = $('#ParamB').val();
+            var c = $('#ParamC').val();
+            parabolaHub.server.sviluppa(a, b, c);
+        });
+
+        parabolaHub.client.parabolaUpdate = function (params)
         {
-            $("#crTabsNum").append(tabsNum);
+            var p = params;
         };
-        lth.client.logOut = function () {
-            $('#hrefLogout')[0].click();
-        };
+
         // Start the connection.
         $.connection.hub.start();
     });
 </script>
+}

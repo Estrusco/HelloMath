@@ -28,6 +28,11 @@ namespace HelloMath.Controllers
             return View("ParabolaIn", new ParabolaRequest());
         }
 
+        public ActionResult Chart()
+        {
+            return View("ChartJS");
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

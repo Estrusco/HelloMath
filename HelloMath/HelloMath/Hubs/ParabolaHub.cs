@@ -1,5 +1,6 @@
 ﻿using HelloMath.Models;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 
 namespace HelloMath.Hubs
 {
@@ -15,7 +16,7 @@ namespace HelloMath.Hubs
             };
 
             var p = new Parabola(request);
-            Clients.Caller.ParabolaUpdate();
+            Clients.Caller.ParabolaUpdate(p);
         }
     }
 }

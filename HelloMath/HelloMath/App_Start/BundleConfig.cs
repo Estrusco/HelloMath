@@ -28,8 +28,7 @@ namespace HelloMath
                       "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/signalR").Include(
-                "~/Scripts/jquery.signalR-2.2.2.min.js",
-                "~/signalr/hubs"));
+                "~/Scripts/jquery.signalR-2.2.2.js"));
         }
     }
 }
