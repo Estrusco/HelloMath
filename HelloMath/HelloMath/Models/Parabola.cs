@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Web;
 
 namespace HelloMath.Models
 {
@@ -27,20 +24,28 @@ namespace HelloMath.Models
     {
         public ParabolaResponse Parametri { get; private set; }
 
+        /// <summary>
+        /// Parametro A = 
+        /// </summary>
+        private Double A = 0;
+        private Double B = 0;
+        private Double C = 0;
+
         public Parabola(ParabolaRequest request)
         {
-            var response = new ParabolaResponse();
-
-            Double A = 0;
-            Double B = 0;
-            Double C = 0;
-
             if (request.ParamA.HasValue)
                 A = request.ParamA.Value;
             if (request.ParamB.HasValue)
                 B = request.ParamB.Value;
             if (request.ParamC.HasValue)
                 C = request.ParamC.Value;
+
+            Parametri = Calcola();
+        }
+
+        public ParabolaResponse Calcola()
+        {
+            var response = new ParabolaResponse();
 
             // Se ho tutti e tre i parametri, è un'equazione di secondo grado normale
             // quindi calcolo il delta
@@ -72,6 +77,8 @@ namespace HelloMath.Models
             response.Asse = -B / (2 * A);
 
             Parametri = response;
+
+            return response;
         }
     }
 }

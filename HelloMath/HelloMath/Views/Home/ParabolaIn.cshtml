@@ -14,3 +14,19 @@
     @Html.EditorForModel();
     <input type="submit" value="Parabola" />
 }
+
+<script type="text/javascript">
+    $(function () {
+        // Declare a proxy to reference the hub.
+        var lth = $.connection.liveTimingHub;
+        lth.client.update = function (sessId, tabsNum)
+        {
+            $("#crTabsNum").append(tabsNum);
+        };
+        lth.client.logOut = function () {
+            $('#hrefLogout')[0].click();
+        };
+        // Start the connection.
+        $.connection.hub.start();
+    });
+</script>

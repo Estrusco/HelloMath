@@ -26,6 +26,10 @@ namespace HelloMath
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/signalR").Include(
+                "~/Scripts/jquery.signalR-2.2.2.min.js",
+                "~/signalr/hubs"));
         }
     }
 }
