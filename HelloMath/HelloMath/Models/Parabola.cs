@@ -17,7 +17,6 @@ namespace HelloMath.Models
         public Double Direttrice { get; set; }
         public Double Asse { get; set; }
         public Double Delta { get; set; }
-        public Double DeltaNegato { get; set; }
     }
 
     public class Parabola
@@ -53,7 +52,6 @@ namespace HelloMath.Models
             {
                 // Delta = B^2 - 4AB
                 response.Delta = Math.Pow(B, 2) - 4 * A * C;
-                response.DeltaNegato = response.Delta * -1;
             }
 
             response.Vertice = new PointF
@@ -61,7 +59,7 @@ namespace HelloMath.Models
                 // X = -B / 2A
                 X = -(float)B / (float)(2 * A),
                 // Y = -Delta / 4A
-                Y = (float)response.DeltaNegato / (float)(4 * A)
+                Y = -(float)response.Delta / (float)(4 * A)
             };
 
             response.Fuoco = new PointF

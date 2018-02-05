@@ -3,38 +3,302 @@
 @{
     ViewBag.Title = "Equazione della Parabola";
 }
+
+
+<style>
+    .maintext {
+        color: red;
+    }
+
+    .button1 {
+        color: green;
+    }
+
+    .button2 {
+        color: red;
+    }
+
+    .button3 {
+        color: blue;
+    }
+</style>
+
+
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 
-<p>Inserire i parametri A B C dell'equazione</p>
+<div class="row">
+    <div class="col-md-6" id="inParams">
+        <p>Inserire i parametri A B C dell'equazione</p>
 
-@using (Html.BeginForm("Parabola", "Home", FormMethod.Post))
-{
-    @Html.ValidationSummary(true)
-    @Html.EditorForModel();
-}
-<input type="button" id="test" title="Prova" value="Test" />
+        @using (Html.BeginForm("Parabola", "Home", FormMethod.Post))
+        {
+            @Html.ValidationSummary(true)
+            @Html.EditorForModel();
+        }
+        <input type="button" id="test" title="Prova" value="Test" />
+    </div>
+    <div class="col-md-6" id="outParams">
+        <p>Output</p>
+        <label id="lblDelta">Delta :</label><br />
+        <label id="lblAsse">Asse (X):</label><br />
+        <label id="lblDirettrice">Direttrice (Y):</label><br />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Graphic Calculator</h1>
+        <p>
+            <span class="maintext">Click a button to draw a grap </span>
+        </p>
+        <div id="canvasDiv">
+            <canvas id="main" width="500" height="500"></canvas>
+        </div>
+        <form>
+            <input type="button" id="y_equals_x" value="y= 1x" class="button1" />
+            <input type="button" id="parabola" value="parabola" class="button2" />
+            <input type="button" id="circle" value="circle" class="button3" />
+        </form>
+    </div>
+</div>
 
 @section Scripts
 {
-<script type="text/javascript">
-    $(function () {
-        var parabolaHub = $.connection.parabolaHub;
+    <script type="text/javascript">
+        $(function () {
+            var parabolaHub = $.connection.parabolaHub;
 
-        $('#test').click(function (e) {
-            var a = $('#ParamA').val();
-            var b = $('#ParamB').val();
-            var c = $('#ParamC').val();
-            parabolaHub.server.sviluppa(a, b, c);
+            $('#test').click(function (e) {
+                var a = $('#ParamA').val();
+                var b = $('#ParamB').val();
+                var c = $('#ParamC').val();
+                drawGrid();
+                parabola(a, b, c);
+                parabolaHub.server.sviluppa(a, b, c);
+            });
+
+            parabolaHub.client.parabolaUpdate = function (params) {
+                var p = params;
+                $('#lblDelta').html('').html(p.Parametri.Delta);
+                $('#lblDirettrice').html('').html(p.Parametri.Direttrice);
+                $('#lblAsse').html('').html(p.Parametri.Delta);
+
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = 'red';
+                ctx.strokeRect(p.Parametri.Fuoco.X, p.Parametri.Fuoco.Y, 1, 1);
+                
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = 'green';
+                ctx.beginPath();
+                p.Parametri.Direttrice *= 12.5;
+                ctx.moveTo(-canvas.width, p.Parametri.Direttrice * -1);
+                ctx.lineTo(canvas.width, p.Parametri.Direttrice * -1);
+                ctx.stroke();
+                ctx.closePath();
+            };
+
+            // Start the connection.
+            $.connection.hub.start();
+
+
+            var canvas;
+            var ctx;
+            var graph_in_progress = 'no';
+            var slope;
+            var color;
+            var drawLineIntervalId;
+
+            function init() {
+                $('#main').remove();
+                $('#canvasDiv').append("<canvas id='main' width='500' height='500'></canvas>");
+                canvas = document.getElementById('main');
+                ctx = canvas.getContext('2d');
+            }
+
+            drawGrid();
+            //var y_equals_x_button = document.getElementById('y_equals_x');
+
+            //y_equals_x_button.addEventListener('click', y_equals_xPressed, false);
+
+            //var parabola_button = document.getElementById('parabola');
+
+            //parabola_button.addEventListener('click', parabolaPressed, false);
+
+            //var circle_button = document.getElementById('circle');
+
+            //circle_button.addEventListener('click', circlePressed, false);
+
+            function drawGrid() {
+                init();
+                var i = 0;
+                axis_pos = 1;
+                can_width = canvas.width;
+
+                //ctx.setTransform(1, 0, 0, 1, 0, 0);
+                //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                var divisore = 40;
+                var numeroRigheColonne = can_width / divisore;
+
+                for (var i = 0; i <= can_width; i += can_width / divisore) {
+                    if (i == (can_width) / 2) {
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = 'blue';
+                    } else {
+                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = 'grey';
+                    }
+                    ctx.beginPath();
+                    ctx.moveTo(i, 0);
+                    ctx.lineTo(i, can_width);
+                    ctx.stroke();
+                    ctx.closePath();
+
+                    ctx.beginPath();
+                    ctx.moveTo(0, i);
+                    ctx.lineTo(can_width, i);
+                    ctx.stroke();
+                    ctx.closePath();
+
+                }
+                ctx.font = '7px _sans';
+                ctx.textBaseline = 'top';
+                ctx.translate((can_width) / 2, (can_width) / 2);
+                for (i = -divisore / 2; i <= divisore / 2; i++) {
+                    if (i != 0) {
+                        //hr label
+                        ctx.fillText(i, i * (can_width / divisore) + 5, 5);
+                        //vertical label
+                        ctx.fillText(i, 5, -i * (can_width / divisore));
+                    }
+                }
+                ctx.font = 'italic bold 20px _sans';
+                ctx.fillText("x", (can_width / 2) - 12, 1);
+                ctx.fillText("y", 4, -(can_width / 2));
+
+            }
+
+            function draw_grid_line(slope, color) {
+
+                if (graph_in_progress == 'yes') {
+                    //only one line at a time
+                    alert('Another line is being drawn please wait');
+                } else {
+                    //start with x left edge of the grid
+                    init_x = -(canvas.width) / 2;
+                    init_y = -(init_x) * slope;
+                    new_x = init_x;
+                    new_y = init_y;
+                    graph_in_progress = "yes";
+                    drawLineIntervalId = setInterval(do_animation, 33);
+                }
+
+
+                function do_animation() {
+                    ctx.lineWidth = 6;
+                    ctx.strokeStyle = color;
+                    ctx.beginPath();
+                    ctx.moveTo(init_x, init_y);
+                    ctx.lineTo(new_x, new_y);
+                    ctx.stroke();
+                    ctx.closePath();
+                    new_x = new_x + 5;
+                    new_y = -(new_x) * slope;
+                    ctx.lineTo(new_x, new_y);
+                    if (new_x == canvas.width + 5) {
+                        clearInterval(drawLineIntervalId);
+                        graph_in_progress = "no";
+                    }
+                }
+            }
+
+            function y_equals_xPressed(e) {
+                draw_grid_line(1, "green");
+            }
+
+            function parabolaPressed(e) {
+                parabola(1, 0, 0, "red");
+            }
+
+            function circlePressed(e) {
+                draw_circle(150, "blue");
+            }
+
+            function draw_circle(radius, color) {
+                var radius = radius;
+                if (graph_in_progress == 'yes') {
+                    alert('Another line being drawn, please wait');
+                } else {
+                    init_x = -radius;
+                    init_y = -Math.sqrt(Math.pow(radius, 2) - Math.pow(init_x, 2));
+                    new_x = init_x;
+                    new_y = init_y;
+                    graph_in_progress = "yes";
+                    drawLineIntervalId = setInterval(do_animation_3, 33);
+                }
+                function do_animation_3() {
+                    ctx.lineWidth = 6;
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.moveTo(init_x, init_y);
+                    //ctx.lineTo(new_x,new_y);
+                    ctx.fillRect(init_x, init_y, 1, 1);
+                    ctx.fillRect(init_x, -init_y, 1, 1);
+                    ctx.stroke();
+                    ctx.closePath();
+                    new_x = new_x + 1;
+                    new_y = -Math.sqrt(Math.pow(radius, 2) - Math.pow(new_x, 2));
+                    ctx.fillRect(new_x, new_y, 1, 1);
+                    ctx.fillRect(new_x, -new_y, 1, 1);
+                    if (new_x == radius + 1) {
+                        clearInterval(drawLineIntervalId);
+                        graph_in_progress = "no";
+                    }
+                }
+
+            }
+
+            function parabola(a, b, c, color) {
+                a = a * 0.1;
+                //b = b * 0.1;
+                c = c * 12.5;
+                if (graph_in_progress == 'yes') {
+                    //only one line at a time
+                    alert('Another line is being drawn please wait');
+                } else {
+                    //start with x left edge of the grid
+                    init_x = -(canvas.width) / 2;
+                    init_y = -(a * (Math.pow(init_x, 2)) + b * init_x + c);
+                    new_x = init_x;
+                    new_y = init_y;
+                    //graph_in_progress = "yes";
+                    do_animation_2();
+                    //drawLineIntervalId = setInterval(do_animation_2, 1);
+                }
+
+                function do_animation_2() {
+                    do {
+                        ctx.lineWidth = 6;
+                        ctx.fillStyle = color;
+                        ctx.beginPath();
+                        ctx.moveTo(init_x, init_y);
+                        //ctx.lineTo(new_x,new_y);
+                        ctx.fillRect(init_x, init_y, 1, 1);
+                        ctx.stroke();
+                        ctx.closePath();
+                        new_x = new_x + 1;
+                        new_y = -(a * (Math.pow(new_x, 2)) + b * new_x + c);
+                        //ctx.moveTo(new_x,new_y);
+                        //ctx.lineTo(new_x,new_y);
+                        ctx.fillRect(new_x, new_y, 1, 1);
+                    } while (new_x != canvas.width + 5);
+                    //if (new_x == canvas.width + 5) {
+                    //    clearInterval(drawLineIntervalId);
+                    //    graph_in_progress = "no";
+                    //}
+                }
+            }
         });
 
-        parabolaHub.client.parabolaUpdate = function (params)
-        {
-            var p = params;
-        };
-
-        // Start the connection.
-        $.connection.hub.start();
-    });
-</script>
+    </script>
 }
