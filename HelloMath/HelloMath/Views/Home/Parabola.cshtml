@@ -90,9 +90,9 @@
                 ctx.strokeStyle = 'green';
                 ctx.beginPath();
                 // aggiustamento per combaciare con la griglia
-                p.Parametri.Direttrice *= 12.5;
-                ctx.moveTo(-canvas.width, p.Parametri.Direttrice * -1);
-                ctx.lineTo(canvas.width, p.Parametri.Direttrice * -1);
+                p.Parametri.Direttrice *= 0.1;
+                ctx.moveTo(-canvas.width, p.Parametri.Direttrice);
+                ctx.lineTo(canvas.width, p.Parametri.Direttrice);
                 ctx.stroke();
                 ctx.closePath();
             };
@@ -315,7 +315,7 @@
                         //ctx.moveTo(init_x, init_y);
                         //ctx.lineTo(new_x,new_y);
                         //ctx.fillRect(init_x, init_y, 1, 1);
-                        new_x = new_x + 1;
+                        new_x = new_x + 0.25;
                         new_y = -(a * (Math.pow(new_x, 2)) + b * new_x + c);
                         //ctx.moveTo(new_x,new_y);
                         //ctx.lineTo(new_x,new_y);
