@@ -14,23 +14,10 @@ namespace HelloMath.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Parabola(ParabolaRequest request)
-        {
-            var p = new Parabola(request);
-
-            return View("ParabolaOut", p.Parametri);
-        }
-
         [HttpGet]
         public ActionResult Parabola()
         {
-            return View("ParabolaIn", new ParabolaRequest());
-        }
-
-        public ActionResult Chart()
-        {
-            return View("ChartJS");
+            return View("Parabola", new ParabolaRequest());
         }
 
         public ActionResult About()

@@ -215,9 +215,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\ParabolaOut.cshtml" />
-    <Content Include="Views\Home\ParabolaIn.cshtml" />
-    <Content Include="Views\Home\ChartJS.cshtml" />
+    <Content Include="Views\Home\Parabola.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

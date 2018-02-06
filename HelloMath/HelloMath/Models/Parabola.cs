@@ -17,6 +17,8 @@ namespace HelloMath.Models
         public Double Direttrice { get; set; }
         public Double Asse { get; set; }
         public Double Delta { get; set; }
+        public Double? EquazX1 { get; set; }
+        public Double? EquazX2 { get; set; }
     }
 
     public class Parabola
@@ -46,12 +48,56 @@ namespace HelloMath.Models
         {
             var response = new ParabolaResponse();
 
-            // Se ho tutti e tre i parametri, è un'equazione di secondo grado normale
+            // Se ho tutti e tre i parametri, è un'equazione di secondo grado completa
             // quindi calcolo il delta
             if (A != 0 && B != 0 && C != 0)
             {
                 // Delta = B^2 - 4AB
                 response.Delta = Math.Pow(B, 2) - 4 * A * C;
+
+                if (response.Delta > 0)
+                {
+                    // Due soluzioni distinte
+                    response.EquazX1 = (-B - Math.Sqrt(response.Delta)) / (2 * A);
+                    response.EquazX2 = (-B + Math.Sqrt(response.Delta)) / (2 * A);
+                }
+                else
+                {
+                    if (response.Delta == 0)
+                    {
+                        // Due soluzioni coincidenti
+                        response.EquazX1 = response.EquazX2 = -B / (2 * A);
+                    }
+                    else
+                        // Nessuna soluzione possibile
+                        response.EquazX1 = response.EquazX2 = null;
+                }
+            }
+            else
+            {
+                if (B == 0 && C == 0)
+                {
+                    response.EquazX1 = response.EquazX2 = 0;
+                }
+                else
+                {
+                    if (B == 0)
+                    {
+                        if (-C / A > 0)
+                        {
+                            response.EquazX1 = -Math.Sqrt(B / A);
+                            response.EquazX2 = Math.Sqrt(B / A);
+                        }
+                        else
+                            // Nessuna soluzione possibile
+                            response.EquazX1 = response.EquazX2 = null;
+                    }
+                    else
+                    {
+                        response.EquazX1 = 0;
+                        response.EquazX2 = -B / A;
+                    }
+                }
             }
 
             response.Vertice = new PointF

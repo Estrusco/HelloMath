@@ -1,6 +1,5 @@
 ﻿using HelloMath.Models;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
 
 namespace HelloMath.Hubs
 {
